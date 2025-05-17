@@ -1,10 +1,28 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
-import vuetify from './plugins/vuetify';
+// main.js o main.ts
+import { createApp } from 'vue'
+import App from './App.vue'
 
-const app = createApp(App);
+// Importa Vuetify y estilos principales
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 
-app.use(router);
-app.use(vuetify);
-app.mount('#app');
+// Importa los iconos MDI
+import '@mdi/font/css/materialdesignicons.css'
+
+// Importa los sets de iconos de Vuetify
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
+  // ... otros settings de Vuetify si tienes
+})
+
+const app = createApp(App)
+app.use(vuetify)
+app.mount('#app')
