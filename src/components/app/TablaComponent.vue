@@ -1,6 +1,4 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-
 // DATA
 const estados = ref([])
 const estadosUnicos = ref([])
@@ -172,6 +170,7 @@ function sortData(order) {
   sortOrder.value = order === 'asc' || order === 'desc' ? order : null
 }
 </script>
+
 
 <template>
   <v-container class="bg-gradient-table" fluid>
@@ -590,16 +589,210 @@ function sortData(order) {
   background: #1f345e;
 }
 
-@media (max-width: 1020px) {
-  .tabla-panel { padding: 18px 3px 13px 3px; }
-  .top-bar__actions { flex-direction: column !important; gap: 11px; }
-  .selector { min-width: 140px; }
-  .modal-content { min-width: 220px; }
-}
 @media (max-width: 650px) {
-  .tabla-panel { padding: 7px 0 7px 0; }
-  .top-bar { margin-top: 10px; margin-bottom: 10px; }
-  .titulo { font-size: 1.08em; }
-  .modal-content { padding: 18px 5vw 13px 5vw; }
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .show-on-mobile {
+    display: inline-block !important;
+    margin-left: 6px;
+  }
+  .tabla-header {
+    flex-direction: row;
+    gap: 5px;
+  }
+  .btn-anio {
+    padding: 6px 11px;
+    font-size: 0.94em;
+    min-width: 80px;
+  }
+  .tabla-panel {
+    padding: 7px 0 7px 0;
+  }
 }
+
+/* Estilo del menú hamburguesa */
+.hamburger-btn {
+  min-width: 38px !important;
+  min-height: 38px !important;
+  color: #fff !important;
+}
+.menu-filtros-lista {
+  min-width: 180px;
+  background: #1a2a44;
+  color: #fff;
+}
+.menu-filtros-lista .v-select__content {
+  color: #fff;
+}
+.menu-filtros-lista .selector {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.tabla-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tabla-lista {
+  min-width: 600px;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+.tabla-lista th,
+.tabla-lista td {
+  white-space: unset;
+}
+
+/* Extra: Media queries para TABLET y MOBILE */
+
+@media (max-width: 1024px) {
+  .tabla-panel {
+    max-width: 98vw;
+    padding: 16px 8px;
+  }
+  .titulo {
+    font-size: 1.13rem;
+  }
+  .filtros-panel {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .selector, .filtro-custom {
+    min-width: 148px;
+    font-size: 0.98em;
+  }
+  .tabla-lista {
+    min-width: 420px;
+    font-size: 0.98em;
+  }
+  .tabla-header {
+    flex-direction: row;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 800px) {
+  .tabla-panel {
+    padding: 7px 2px 7px 2px;
+  }
+  .filtros-panel {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .top-bar__actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .selector, .filtro-custom {
+    min-width: 120px;
+    font-size: 0.93em;
+  }
+  .tabla-lista th, .tabla-lista td {
+    padding: 9px 5px;
+  }
+  .btn-anio {
+    padding: 6px 9px;
+    font-size: 0.93em;
+    min-width: 70px;
+  }
+}
+
+@media (max-width: 650px) {
+  .tabla-panel {
+    padding: 4px 0 4px 0;
+    max-width: 100vw;
+  }
+  .tabla-lista {
+    min-width: 300px;
+    font-size: 0.90em;
+  }
+  .titulo {
+    font-size: 0.97rem;
+  }
+  .filtros-panel, .top-bar__actions {
+    flex-direction: column !important;
+    gap: 7px;
+    width: 100%;
+    margin-bottom: 12px;
+    align-items: stretch;
+  }
+  .selector {
+    min-width: 0;
+    width: 100%;
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabla-panel {
+    padding: 0 0 0 0;
+  }
+  .tabla-lista {
+    min-width: 180px;
+    font-size: 0.82em;
+  }
+  .titulo {
+    font-size: 0.78em;
+  }
+  .btn-anio {
+    padding: 4px 5px;
+    font-size: 0.78em;
+    min-width: 60px;
+  }
+  .modal-content {
+    min-width: 90vw;
+    padding: 16px 4px 8px 4px;
+  }
+}
+
+/* Responsive: filtros uno debajo del otro en mobile */
+@media (max-width: 650px) {
+  .filtros-flex {
+    flex-direction: column !important;
+    gap: 7px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .selector {
+    min-width: 0;
+    width: 100%;
+    margin-right: 0 !important;
+  }
+  .top-bar__actions {
+    gap: 0;
+  }
+}
+
+/* ...resto de tu CSS igual... */
+
+.tabla-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tabla-lista {
+  min-width: 600px;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+.tabla-lista th,
+.tabla-lista td {
+  white-space: unset;
+}
+@media (max-width: 600px) {
+  .tabla-lista th.desktop-col,
+  .tabla-lista td.desktop-col {
+    display: none;
+  }
+  .tabla-lista {
+    min-width: 320px;
+    font-size: 0.92em;
+  }
+}
+
 </style>
