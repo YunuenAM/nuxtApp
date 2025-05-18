@@ -1,5 +1,4 @@
 <script setup>
-// DATA
 const estados = ref([])
 const estadosUnicos = ref([])
 const aniosUnicos = ref([])
@@ -10,6 +9,7 @@ const currentPage = ref(1)
 const itemsPerPage = ref(5)
 const maxVisiblePages = ref(3)
 const sortOrder = ref(null)
+const mobileActionsEstado = ref(null)
 
 // Dialogo para agregar año
 const dialogAgregarAnio = ref(false);
@@ -169,8 +169,19 @@ const eliminarEstado = estado => {
 function sortData(order) {
   sortOrder.value = order === 'asc' || order === 'desc' ? order : null
 }
-</script>
 
+// Acciones mobile
+function openMobileActions(estado) {
+  if (mobileActionsEstado.value && mobileActionsEstado.value.nombre === estado.nombre && mobileActionsEstado.value.anio === estado.anio && mobileActionsEstado.value.idh === estado.idh) {
+    mobileActionsEstado.value = null
+  } else {
+    mobileActionsEstado.value = estado
+  }
+}
+function closeMobileActions() {
+  mobileActionsEstado.value = null
+}
+</script>
 
 <template>
   <v-container class="bg-gradient-table" fluid>
@@ -215,37 +226,35 @@ function sortData(order) {
       </v-col>
     </v-row>
 
-     <v-col cols="12" md="6">
-        <div class="filtros-panel">
-          <!-- Filtro Estado -->
-          <div class="filtro-custom">
-            <select v-model="selectedEstado" class="filtro-select">
-              <option :value="null">Selecciona Estado</option>
-              <option v-for="e in estadosUnicos" :key="e" :value="e">{{ e }}</option>
-            </select>
-            <span class="filtro-arrow"/>
-          </div>
-          <!-- Filtro Año -->
-          <div class="filtro-custom">
-            <select v-model="selectedAnio" class="filtro-select">
-              <option :value="null">Selecciona Año</option>
-              <option v-for="a in aniosUnicos" :key="a" :value="a">{{ a }}</option>
-            </select>
-            <span class="filtro-arrow"/>
-          </div>
-          <!-- Filtro Ordenar -->
-          <div class="filtro-custom">
-            <select v-model="sortOrder" class="filtro-select">
-              <option :value="null">Ordenar</option>
-              <option value="asc">Ascendente</option>
-              <option value="desc">Descendente</option>
-            </select>
-            <span class="filtro-arrow"/>
-          </div>
+    <v-col cols="12" md="6">
+      <div class="filtros-panel">
+        <!-- Filtro Estado -->
+        <div class="filtro-custom">
+          <select v-model="selectedEstado" class="filtro-select">
+            <option :value="null">Selecciona Estado</option>
+            <option v-for="e in estadosUnicos" :key="e" :value="e">{{ e }}</option>
+          </select>
+          <span class="filtro-arrow"/>
         </div>
-      </v-col>
-
-
+        <!-- Filtro Año -->
+        <div class="filtro-custom">
+          <select v-model="selectedAnio" class="filtro-select">
+            <option :value="null">Selecciona Año</option>
+            <option v-for="a in aniosUnicos" :key="a" :value="a">{{ a }}</option>
+          </select>
+          <span class="filtro-arrow"/>
+        </div>
+        <!-- Filtro Ordenar -->
+        <div class="filtro-custom">
+          <select v-model="sortOrder" class="filtro-select">
+            <option :value="null">Ordenar</option>
+            <option value="asc">Ascendente</option>
+            <option value="desc">Descendente</option>
+          </select>
+          <span class="filtro-arrow"/>
+        </div>
+      </div>
+    </v-col>
 
     <!-- Tabla -->
     <div class="tabla-panel">
@@ -259,14 +268,16 @@ function sortData(order) {
         <button class="btn-anio" @click="abrirDialogoAgregarAnio">➕ Año</button>
       </div>
 
+      <div class="tabla-scroll">
       <v-table class="tabla-lista">
         <thead>
           <tr>
             <th>Estado</th>
             <th>Año</th>
             <th>IDH</th>
-            <th>Ver Gráfica</th>
-            <th>Acciones</th>
+            <th class="desktop-col">Ver Gráfica</th>
+            <th class="desktop-col">Acciones</th>
+            <th class="mobile-col" style="display:none;">Opciones</th>
           </tr>
         </thead>
         <tbody>
@@ -274,12 +285,13 @@ function sortData(order) {
             <td>{{ estado.nombre }}</td>
             <td>{{ estado.anio }}</td>
             <td>{{ estado.idh }}</td>
-            <td>
+            <!-- Desktop acciones -->
+            <td class="desktop-col">
               <v-btn variant="text" class="icon-btn" title="Ver gráfico" @click="verGrafico(estado)">
                 <span class="icon-bar-chart"/>
               </v-btn>
             </td>
-            <td>
+            <td class="desktop-col">
               <v-btn variant="text" class="icon-btn" title="Editar" @click="editarEstado(estado)">
                 <span class="icon-edit"/>
               </v-btn>
@@ -287,13 +299,33 @@ function sortData(order) {
                 <span class="icon-delete"/>
               </v-btn>
             </td>
+            <!-- Mobile acciones -->
+            <td class="mobile-col" style="display:none;position:relative;">
+              <button class="hamburger-btn" aria-label="Mostrar acciones" @click="openMobileActions(estado)">
+                <svg width="23" height="23" viewBox="0 0 23 23" fill="none">
+                  <circle cx="4" cy="11.5" r="2" fill="#fff"/>
+                  <circle cx="11.5" cy="11.5" r="2" fill="#fff"/>
+                  <circle cx="19" cy="11.5" r="2" fill="#fff"/>
+                </svg>
+              </button>
+              <div
+                v-if="mobileActionsEstado && mobileActionsEstado.nombre === estado.nombre && mobileActionsEstado.anio === estado.anio && mobileActionsEstado.idh === estado.idh"
+                class="mobile-actions-menu"
+                @click.stop
+              >
+                <button @click="verGrafico(estado); closeMobileActions()">Ver Gráfica</button>
+                <button @click="editarEstado(estado); closeMobileActions()">Editar</button>
+                <button @click="eliminarEstado(estado); closeMobileActions()">Eliminar</button>
+                <button class="close-btn" @click="closeMobileActions">Cerrar</button>
+              </div>
+            </td>
           </tr>
           <tr v-if="paginatedEstados.length === 0">
-            <td colspan="5" class="sin-resultados">No hay resultados.</td>
+            <td colspan="6" class="sin-resultados">No hay resultados.</td>
           </tr>
         </tbody>
       </v-table>
-
+      </div>
       <!-- Paginación -->
       <div class="paginador">
         <button class="paginador-btn" :disabled="currentPage === 1" @click="previousPage">&lt;</button>
@@ -321,8 +353,17 @@ function sortData(order) {
         </div>
       </div>
     </div>
+    <!-- Overlay para cerrar el menú móvil tocando fuera -->
+    <div
+      v-if="mobileActionsEstado"
+      class="mobile-action-overlay"
+      style="position: fixed;top:0;left:0;right:0;bottom:0;z-index:1039;"
+      @click="closeMobileActions"
+    />
   </v-container>
 </template>
+
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -610,12 +651,82 @@ function sortData(order) {
     padding: 7px 0 7px 0;
   }
 }
+@media (max-width: 650px) {
+  .desktop-col {
+    display: none !important;
+  }
+  .mobile-col {
+    display: table-cell !important;
+  }
+}
+@media (min-width: 651px) {
+  .mobile-col {
+    display: none !important;
+  }
+}
 
 /* Estilo del menú hamburguesa */
 .hamburger-btn {
-  min-width: 38px !important;
-  min-height: 38px !important;
-  color: #fff !important;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  min-width: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 50%;
+  transition: background 0.13s;
+}
+.hamburger-btn:active,
+.hamburger-btn:focus {
+  background: #2a3d6d;
+  outline: none;
+}
+.mobile-actions-menu {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  background: #1a2a44;
+  border-radius: 11px;
+  box-shadow: 0 2px 28px #111a2b55;
+  min-width: 140px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.17s;
+  border: 1px solid #2950bc;
+  overflow: hidden;
+}
+.mobile-actions-menu button {
+  background: none;
+  color: #fff;
+  border: none;
+  font-size: 1em;
+  padding: 13px 16px;
+  text-align: left;
+  transition: background 0.15s;
+  cursor: pointer;
+  border-bottom: 1px solid #17325e44;
+}
+.mobile-actions-menu button:last-child {
+  border-bottom: none;
+}
+.mobile-actions-menu button:hover {
+  background: #203673;
+}
+.mobile-actions-menu .close-btn {
+  color: #ff7e47;
+  font-weight: 700;
+  background: #1a2a44;
+}
+.mobile-action-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: transparent;
+  z-index: 1040;
 }
 .menu-filtros-lista {
   min-width: 180px;
