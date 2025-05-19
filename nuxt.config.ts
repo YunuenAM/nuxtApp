@@ -17,5 +17,6 @@ export default defineNuxtConfig({
   },
   build: {
     transpile: ['vuetify']
-  }
+  },
+plugins: ['./plugins/firebase']
 })
