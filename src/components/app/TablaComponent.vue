@@ -166,19 +166,24 @@ const eliminarEstado = estado => {
 }
 
 // Ordenar
-function sortData(order) {
+const sortData = order => {
   sortOrder.value = order === 'asc' || order === 'desc' ? order : null
 }
 
 // Acciones mobile
-function openMobileActions(estado) {
-  if (mobileActionsEstado.value && mobileActionsEstado.value.nombre === estado.nombre && mobileActionsEstado.value.anio === estado.anio && mobileActionsEstado.value.idh === estado.idh) {
+const openMobileActions = estado => {
+  if (
+    mobileActionsEstado.value &&
+    mobileActionsEstado.value.nombre === estado.nombre &&
+    mobileActionsEstado.value.anio === estado.anio &&
+    mobileActionsEstado.value.idh === estado.idh
+  ) {
     mobileActionsEstado.value = null
   } else {
     mobileActionsEstado.value = estado
   }
 }
-function closeMobileActions() {
+const closeMobileActions = () => {
   mobileActionsEstado.value = null
 }
 </script>
@@ -199,6 +204,7 @@ function closeMobileActions() {
           variant="outlined"
           density="compact"
           hide-details
+          aria-label="Selecciona Estado"
         />
         <v-select
           v-model="selectedAnio"
@@ -208,6 +214,7 @@ function closeMobileActions() {
           variant="outlined"
           density="compact"
           hide-details
+          aria-label="Selecciona Año"
         />
         <v-select
           :model-value="sortOrder"
@@ -221,6 +228,7 @@ function closeMobileActions() {
           variant="outlined"
           density="compact"
           hide-details
+          aria-label="Ordenar por IDH"
           @update:model-value="sortData"
         />
       </v-col>
@@ -230,7 +238,7 @@ function closeMobileActions() {
       <div class="filtros-panel">
         <!-- Filtro Estado -->
         <div class="filtro-custom">
-          <select v-model="selectedEstado" class="filtro-select">
+          <select v-model="selectedEstado" class="filtro-select" aria-label="Filtro por estado">
             <option :value="null">Selecciona Estado</option>
             <option v-for="e in estadosUnicos" :key="e" :value="e">{{ e }}</option>
           </select>
@@ -238,7 +246,7 @@ function closeMobileActions() {
         </div>
         <!-- Filtro Año -->
         <div class="filtro-custom">
-          <select v-model="selectedAnio" class="filtro-select">
+          <select v-model="selectedAnio" class="filtro-select" aria-label="Filtro por año">
             <option :value="null">Selecciona Año</option>
             <option v-for="a in aniosUnicos" :key="a" :value="a">{{ a }}</option>
           </select>
@@ -246,7 +254,7 @@ function closeMobileActions() {
         </div>
         <!-- Filtro Ordenar -->
         <div class="filtro-custom">
-          <select v-model="sortOrder" class="filtro-select">
+          <select v-model="sortOrder" class="filtro-select" aria-label="Ordenar por IDH">
             <option :value="null">Ordenar</option>
             <option value="asc">Ascendente</option>
             <option value="desc">Descendente</option>
@@ -264,12 +272,13 @@ function closeMobileActions() {
           class="tabla-search"
           placeholder="🔍 Buscar entidad..."
           type="text"
+          aria-label="Buscar por estado"
         >
-        <button class="btn-anio" @click="abrirDialogoAgregarAnio">➕ Año</button>
+        <button class="btn-anio" aria-label="Agregar nuevo año" @click="abrirDialogoAgregarAnio">➕ Año</button>
       </div>
 
       <div class="tabla-scroll">
-      <v-table class="tabla-lista">
+      <v-table class="tabla-lista" aria-label="Tabla de IDH por estado y año">
         <thead>
           <tr>
             <th>Estado</th>
@@ -287,22 +296,22 @@ function closeMobileActions() {
             <td>{{ estado.idh }}</td>
             <!-- Desktop acciones -->
             <td class="desktop-col">
-              <v-btn variant="text" class="icon-btn" title="Ver gráfico" @click="verGrafico(estado)">
+              <v-btn variant="text" class="icon-btn" title="Ver gráfico" aria-label="Ver gráfico" @click="verGrafico(estado)">
                 <span class="icon-bar-chart"/>
               </v-btn>
             </td>
             <td class="desktop-col">
-              <v-btn variant="text" class="icon-btn" title="Editar" @click="editarEstado(estado)">
+              <v-btn variant="text" class="icon-btn" title="Editar" aria-label="Editar estado" @click="editarEstado(estado)">
                 <span class="icon-edit"/>
               </v-btn>
-              <v-btn variant="text" class="icon-btn" title="Eliminar" @click="eliminarEstado(estado)">
+              <v-btn variant="text" class="icon-btn" title="Eliminar" aria-label="Eliminar estado" @click="eliminarEstado(estado)">
                 <span class="icon-delete"/>
               </v-btn>
             </td>
             <!-- Mobile acciones -->
             <td class="mobile-col" style="display:none;position:relative;">
-              <button class="hamburger-btn" aria-label="Mostrar acciones" @click="openMobileActions(estado)">
-                <svg width="23" height="23" viewBox="0 0 23 23" fill="none">
+              <button class="hamburger-btn" aria-label="Mostrar acciones para estado" @click="openMobileActions(estado)">
+                <svg width="23" height="23" viewBox="0 0 23 23" fill="none" aria-hidden="true">
                   <circle cx="4" cy="11.5" r="2" fill="#fff"/>
                   <circle cx="11.5" cy="11.5" r="2" fill="#fff"/>
                   <circle cx="19" cy="11.5" r="2" fill="#fff"/>
@@ -311,12 +320,13 @@ function closeMobileActions() {
               <div
                 v-if="mobileActionsEstado && mobileActionsEstado.nombre === estado.nombre && mobileActionsEstado.anio === estado.anio && mobileActionsEstado.idh === estado.idh"
                 class="mobile-actions-menu"
+                aria-label="Menú de acciones móviles"
                 @click.stop
               >
-                <button @click="verGrafico(estado); closeMobileActions()">Ver Gráfica</button>
-                <button @click="editarEstado(estado); closeMobileActions()">Editar</button>
-                <button @click="eliminarEstado(estado); closeMobileActions()">Eliminar</button>
-                <button class="close-btn" @click="closeMobileActions">Cerrar</button>
+                <button aria-label="Ver gráfica" @click="verGrafico(estado); closeMobileActions()">Ver Gráfica</button>
+                <button aria-label="Editar estado" @click="editarEstado(estado); closeMobileActions()">Editar</button>
+                <button aria-label="Eliminar estado" @click="eliminarEstado(estado); closeMobileActions()">Eliminar</button>
+                <button class="close-btn" aria-label="Cerrar menú móvil" @click="closeMobileActions">Cerrar</button>
               </div>
             </td>
           </tr>
@@ -327,29 +337,30 @@ function closeMobileActions() {
       </v-table>
       </div>
       <!-- Paginación -->
-      <div class="paginador">
-        <button class="paginador-btn" :disabled="currentPage === 1" @click="previousPage">&lt;</button>
+      <div class="paginador" aria-label="Paginador">
+        <button class="paginador-btn" :disabled="currentPage === 1" aria-label="Página anterior" @click="previousPage">&lt;</button>
         <button
           v-for="page in visiblePages"
           :key="page"
           :class="['paginador-btn', { active: page === currentPage }]"
+          :aria-label="`Ir a la página ${page}`"
           @click="goToPage(page)"
         >
           {{ page }}
         </button>
-        <button class="paginador-btn" :disabled="currentPage === totalPages" @click="nextPage">&gt;</button>
+        <button class="paginador-btn" :disabled="currentPage === totalPages" aria-label="Página siguiente" @click="nextPage">&gt;</button>
       </div>
     </div>
 
     <!-- Modal centrado para agregar año -->
-    <div v-if="dialogAgregarAnio" class="modal-overlay">
+    <div v-if="dialogAgregarAnio" class="modal-overlay" aria-modal="true" aria-label="Agregar nuevo año">
       <div class="modal-content" @click.stop>
         <h3>Agregar nuevo año</h3>
-        <input v-model="nuevoAnio" type="number" placeholder="Año" min="1900" max="2100" @keyup.enter="agregarAnio">
-        <div v-if="errorAnio" class="dialog-error">{{ errorAnio }}</div>
+        <input v-model="nuevoAnio" type="number" placeholder="Año" min="1900" max="2100" aria-label="Nuevo año" @keyup.enter="agregarAnio">
+        <div v-if="errorAnio" class="dialog-error" aria-live="assertive">{{ errorAnio }}</div>
         <div class="dialog-actions">
-          <button @click="agregarAnio">Agregar</button>
-          <button @click="dialogAgregarAnio = false">Cancelar</button>
+          <button aria-label="Agregar año" @click="agregarAnio">Agregar</button>
+          <button aria-label="Cancelar" @click="dialogAgregarAnio = false">Cancelar</button>
         </div>
       </div>
     </div>
@@ -358,12 +369,11 @@ function closeMobileActions() {
       v-if="mobileActionsEstado"
       class="mobile-action-overlay"
       style="position: fixed;top:0;left:0;right:0;bottom:0;z-index:1039;"
+      aria-label="Cerrar menú móvil"
       @click="closeMobileActions"
     />
   </v-container>
 </template>
-
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -373,52 +383,53 @@ function closeMobileActions() {
   font-family: 'Roboto', Arial, sans-serif;
 }
 .top-bar {
-  margin-top: 32px;
-  margin-bottom: 18px;
+  margin-top: 2.13em;
+  margin-bottom: 1.13em;
 }
 .titulo {
   color: #FFF;
-  font-size: 1.55rem;
+  font-size: 1.55em;
   font-weight: 700;
   letter-spacing: 1.2px;
-  margin-bottom: 6px;
+  margin-bottom: 0.38em;
   display: block;
 }
 .top-bar__actions {
-  gap: 16px;
+  gap: 1em;
 }
 .selector {
-  min-width: 210px;
+  min-width: 13.13em;
 }
 .tabla-panel {
  background: linear-gradient(180deg, #131b2e 0%, #2150a4 100%);
-  border-radius: 17px;
-  max-width: 1100px;
+  border-radius: 1.06em;
+  max-width: 68.75em;
   margin: 0 auto;
-  padding: 34px 24px 24px 24px;
-  box-shadow: 0 0 24px #1a274466;
+  padding: 2.13em 1.5em 1.5em 1.5em;
+  box-shadow: 0 0 1.5em #1a274466;
+  width: 100%;
 }
 .tabla-header {
-  margin-bottom: 14px;
+  margin-bottom: 0.88em;
   align-items: center;
-  gap: 10px;
+  gap: 0.63em;
 }
 .tabla-search {
-  border-radius: 10px;
-  padding: 9px 18px;
+  border-radius: 0.63em;
+  padding: 0.56em 1.13em;
   border: none;
   outline: none;
   font-size: 1.06em;
   background: #232e4b;
   color: #e7efff;
-  min-width: 130px;
-  margin-right: 10px;
+  min-width: 8.13em;
+  margin-right: 0.63em;
 }
 .btn-anio {
   background: #ff5e2a;
   color: #fff;
-  border-radius: 14px;
-  padding: 8px 19px;
+  border-radius: 0.88em;
+  padding: 0.5em 1.19em;
   font-size: 1em;
   font-weight: bold;
   border: none;
@@ -433,17 +444,20 @@ function closeMobileActions() {
   color: #fff;
   font-weight: 700;
   font-size: 1.14em;
+  width: 100%;
+  table-layout: auto;
   text-align: left;
-  padding: 14px 10px;
+  padding: 0.88em 0.63em;
   letter-spacing: 1px;
   border-bottom: 1px solid #2855a1;
 }
 .tabla-lista td {
   color: #fff;
+  width: 100%;
   min-width: 10%;
   min-height: auto;
   font-size: 1.08em;
-  padding: 13px 10px;
+  padding: 0.81em 0.63em;
   border-bottom: 1px solid #182849;
   background: transparent;
 }
@@ -459,10 +473,10 @@ function closeMobileActions() {
   border: none;
   color: #fff;
   cursor: pointer;
-  margin: 0 3px;
+  margin: 0 0.19em;
   font-size: 1.2em;
   vertical-align: middle;
-  min-width: 24px;
+  min-width: 1.5em;
 }
 .icon-bar-chart::before {
   content: "\1F5A5";
@@ -480,18 +494,18 @@ function closeMobileActions() {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 13px;
+  gap: 0.38em;
+  margin-top: 0.81em;
 }
 .paginador-btn {
   background: #1f345e;
   color: #fff;
   border: none;
-  border-radius: 11px;
-  min-width: 38px;
-  min-height: 38px;
+  border-radius: 0.69em;
+  min-width: 2.38em;
+  min-height: 2.38em;
   font-size: 1.13em;
-  margin: 0 3px;
+  margin: 0 0.19em;
   transition: background 0.15s, color 0.15s;
   font-weight: 600;
   cursor: pointer;
@@ -508,27 +522,27 @@ function closeMobileActions() {
 .sin-resultados {
   text-align: center;
   color: #fff;
-  padding: 18px 0;
+  padding: 1.13em 0;
 }
 
 .filtros-panel {
   display: flex;
-  gap: 32px;
+  gap: 2em;
   justify-content: flex-end;
-  margin-bottom: 10px;
-  margin-top: 5px;
+  margin-bottom: 0.63em;
+  margin-top: 0.31em;
 }
 .filtro-custom {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 270px;
+  min-width: 16.88em;
   background: linear-gradient(90deg, #151e35 80%, #11214a 100%);
-  border-radius: 18px;
-  border: 1.2px solid #d8e5ff22;
-  box-shadow: 0 1px 12px #1a274422;
+  border-radius: 1.13em;
+  border: 0.08em solid #d8e5ff22;
+  box-shadow: 0 0.06em 0.75em #1a274422;
   overflow: hidden;
-  margin-right: 5px;
+  margin-right: 0.31em;
 }
 .filtro-select {
   appearance: none;
@@ -538,7 +552,7 @@ function closeMobileActions() {
   color: #fff;
   font-size: 1.09em;
   font-family: inherit;
-  padding: 15px 46px 15px 21px;
+  padding: 0.94em 2.88em 0.94em 1.31em;
   width: 100%;
   cursor: pointer;
 }
@@ -547,7 +561,7 @@ function closeMobileActions() {
 }
 .filtro-arrow {
   position: absolute;
-  right: 18px;
+  right: 1.13em;
   top: 0; bottom: 0;
   display: flex;
   align-items: center;
@@ -557,9 +571,9 @@ function closeMobileActions() {
   content: '';
   display: inline-block;
   border: solid #fff;
-  border-width: 0 3px 3px 0;
-  padding: 8px;
-  margin-left: 2px;
+  border-width: 0 0.19em 0.19em 0;
+  padding: 0.5em;
+  margin-left: 0.13em;
   transform: rotate(45deg);
   opacity: 0.85;
 }

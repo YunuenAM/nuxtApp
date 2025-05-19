@@ -82,10 +82,26 @@ const activeItem = ref('Tablero');
 const router = useRouter();
 
 const menuItems = [
-  { title: 'Tablero', icon: dashboardIcon, route: '/' },
-  { title: 'Tablas', icon: barChartIcon, route: '/tablas' },
-  { title: 'Cuenta', icon: billingIcon, route: '/cuenta' },
-  { title: 'Ajustes', icon: gearIcon, route: '/ajustes' },
+  {
+    title: 'Tablero',
+    icon: dashboardIcon,
+    route: '/dashboard',
+  },
+  {
+    title: 'Gráficos',
+    icon: barChartIcon,
+    route: '/charts',
+  },
+  {
+    title: 'Facturación',
+    icon: billingIcon,
+    route: '/billing',
+  },
+  {
+    title: 'Configuración',
+    icon: gearIcon,
+    route: '/settings',
+  },
 ];
 
 const handleNavigation = (item) => {
