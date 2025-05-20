@@ -377,6 +377,7 @@ const closeMobileActions = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .bg-gradient-table {
   min-height: 100vh;
   padding: 0;
@@ -458,7 +459,7 @@ const closeMobileActions = () => {
   min-height: auto;
   font-size: 1.08em;
   padding: 0.81em 0.63em;
-  border-bottom: 1px solid #182849;
+  border-bottom: 1px solid white  ;
   background: transparent;
 }
 .tabla-lista tr:last-child td {

@@ -2,9 +2,13 @@ import { resolve } from 'path'
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
+  ssr: false, // ⬅️ Necesario para generar HTML estático compatible con Firebase
+  // nitro: {
+  //   preset: 'firebase' // ⬅️ Esto genera la carpeta .output/public para Firebase
+  // },
   css: [
     'vuetify/styles',
-    '@mdi/font/css/materialdesignicons.css' // <-- Importa el CSS de los iconos aquí
+    '@mdi/font/css/materialdesignicons.css'
   ],
   alias: {
     '@': resolve(__dirname, './src'),
@@ -12,11 +16,10 @@ export default defineNuxtConfig({
   },
   vite: {
     ssr: {
-      noExternal: ['vuetify'] // NECESARIO para evitar error con .css
+      noExternal: ['vuetify']
     }
   },
   build: {
     transpile: ['vuetify']
-  },
-
+  }
 })

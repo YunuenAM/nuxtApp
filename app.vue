@@ -17,12 +17,29 @@ import TablaComponent from './src/components/app/TablaComponent.vue';
 </script>
 
 <style scoped>
+/* Asegura que el fondo azul cubra toda la pantalla */
+:global(html),
+:global(body),
+:global(#app) {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor principal */
 .app-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* Por defecto, en móvil */
   min-height: 100vh;
   gap: 2rem;
-  background-color: #112;
+  background-color: #112; /* Azul oscuro */
   color: white;
+}
+
+/* En pantallas más grandes, cambia a diseño horizontal */
+@media (min-width: 768px) {
+  .app-container {
+    flex-direction: row;
+  }
 }
 </style>
